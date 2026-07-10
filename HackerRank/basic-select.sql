@@ -28,3 +28,31 @@ The COUNTRYCODE for Japan is JPN. */
 select names
 from city
 where countrycode = "JPN";
+
+/*Query a list of CITY and STATE from th STATION table*/
+select city, state 
+from station;
+
+/*Query a list of CITY names from STATION for cities that have an even ID number. 
+Print the results in any order, but exclude duplicates from the answer.*/
+select distinct city
+from station 
+where id % 2 = 0;
+
+/*Find the difference between the total number of CITY entries in the table and 
+the number of distinct CITY entries in the table.*/
+select count(city) - count(distinct city)
+from station;
+
+/*Query the list of CITY names starting with vowels (i.e., a, e, i, o, or u) from STATION. 
+Your result cannot contain duplicates.*/
+select distinct city
+from station 
+where lower(substring(city, 1, 1) in ('a', 'e', 'i', 'o', 'u'));
+/*Can also be solved using LIKE clause --> like 'a%' and the OR clause*/
+
+/*Query the list of CITY names ending with vowels (a, e, i, o, u) from STATION. 
+Your result cannot contain duplicates.*/
+select city
+from station
+where lower(substring(city, -1, 1) in ('a', 'e', 'i', 'o', 'u'));
