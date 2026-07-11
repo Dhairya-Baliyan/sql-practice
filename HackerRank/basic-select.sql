@@ -56,3 +56,4 @@ Your result cannot contain duplicates.*/
 select city
 from station
 where lower(substring(city, -1, 1) in ('a', 'e', 'i', 'o', 'u'));
+
