@@ -17,3 +17,26 @@ select concat('There are a total of ', count(occupation),' ', lower(occupation),
 from occupations
 group by occupation
 order by count(occupation) asc;
+
+
+
+
+
+
+/*Pivot
+  the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. The output should consist of four columns (Doctor, Professor, Singer, and Actor) in that specific order, with their respective names listed alphabetically under each column.
+  Note: Print NULL when there are no more names corresponding to an occupation.
+*/
+select
+    max(case when occupation = 'Doctor' then name end) as Doctor,
+    max(case when occupation = 'Professor' then name end) as Professor,
+    max(case when occupation = 'Singer' then name end) as Singer,
+    max(case when occupation = 'Actor' then name end) as Actor
+from (
+    select 
+        name, 
+        occupation, 
+        row_number() over(partition by occupation order by name) as RowNum
+    from Occupations
+) as new_table
+group by RowNum;
