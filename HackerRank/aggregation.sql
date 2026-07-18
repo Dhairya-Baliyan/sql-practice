@@ -95,3 +95,39 @@ FROM station
 WHERE lat_n > 38.7780
 ORDER BY lat_n ASC
 LIMIT 1;
+
+
+/*Consider P1(a, b) and P2(c, d) to be two points on a 2D plane.
+
+-->a happens to equal the minimum value in Northern Latitude (LAT_N in STATION).
+-->b happens to equal the minimum value in Western Longitude (LONG_W in STATION).
+-->c happens to equal the maximum value in Northern Latitude (LAT_N in STATION).
+-->d happens to equal the maximum value in Western Longitude (LONG_W in STATION).
+Query the Manhattan Distance between points P1 and P2 and round it to a scale of 4 decimal places.*/
+SELECT 
+    ROUND(MAX(lat_n) - MIN(lat_n) + MAX(long_w) - MIN(long_w), 4) AS manhattan_distance
+FROM station;
+
+
+/*Consider P1(a, b) and P2(c, d) to be two points on a 2D plane where (a, b) are the respective minimum and maximum values of Northern Latitude (LAT_N) and  
+(c, d) are the respective minimum and maximum values of Western Longitude (LONG_W) in STATION.
+
+Query the Euclidean Distance between points P1 and P2 and format your answer to display 4 decimal digits.*/
+SELECT
+    TRUNCATE(SQRT(POWER(MAX(lat_n)- MIN(lat_n), 2) + POWER(MAX(long_w)- MIN(long_w), 2)), 4)
+FROM station;
+
+
+/*A median is defined as a number separating the higher half of a data set from the lower half. 
+Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to  decimal places.*/
+WITH Rankedstations AS (
+    SELECT 
+        lat_n,
+        ROW_NUMBER() OVER (ORDER BY lat_n ASC) as row_num,
+        COUNT(*) OVER () as total_count
+    FROM station
+)
+SELECT 
+    ROUND(AVG(lat_n), 4)
+FROM Rankedstations
+WHERE row_num IN (FLOOR((total_count + 1) / 2), CEIL((total_count + 1) / 2));
