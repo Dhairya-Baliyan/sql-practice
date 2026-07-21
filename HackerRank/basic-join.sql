@@ -124,3 +124,32 @@ WHERE total_challenges = (SELECT MAX(total_challenges) FROM hacker_challenges)
       total_challenges IN 
       (SELECT total_challenges FROM hacker_challenges GROUP BY total_challenges HAVING COUNT(*) = 1)
 ORDER BY total_challenges DESC, hacker_id ASC;
+
+
+
+
+/*You did such a great job helping Julia with her last coding contest challenge that she wants you to work on this one, too!
+
+The total score of a hacker is the sum of their maximum scores for all of the challenges. 
+Write a query to print the hacker_id, name, and total score of the hackers ordered by the descending score. 
+If more than one hacker achieved the same total score, then sort the result by ascending hacker_id. 
+Exclude all hackers with a total score of  from your result.*/
+WITH hackers_scores AS(
+    SELECT DISTINCT h.hacker_id,
+           h.name,
+           s.challenge_id,
+           MAX(s.score) OVER (PARTITION BY h.hacker_id, s.challenge_id) AS scores
+    FROM hackers AS h
+    JOIN submissions AS s
+        ON h.hacker_id = s.hacker_id
+)
+
+SELECT hacker_id,
+       name,
+       SUM(scores) AS total_score
+FROM hackers_scores
+GROUP BY hacker_id, name
+HAVING SUM(scores) > 0
+ORDER BY SUM(scores) DESC,
+         hacker_id ASC;
+         
